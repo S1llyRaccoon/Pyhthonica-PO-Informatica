@@ -1,15 +1,119 @@
-entrypoint = "main.py"
-modules = ["python-3.11"]
+import turtle
+import random
+import time
 
-[nix]
-channel = "stable-24_05"
+# Screen setup
+WIDTH, HEIGHT = 400, 600
+wn = turtle.Screen()
+wn.title("Flappy Bird (Turtle Version)")
+wn.bgcolor("skyblue")
+wn.setup(width=WIDTH, height=HEIGHT)
+wn.tracer(0)
 
-[unitTest]
-language = "python3"
+# Bird setup
+bird = turtle.Turtle()
+bird.shape("circle")
+bird.color("blue")
+bird.shapesize(stretch_wid=1, stretch_len=1.5)
+bird.penup()
+bird.goto(-100, 0)
+bird.dy = 0
+gravity = -0.4
 
-[gitHubImport]
-requiredFiles = [".replit", "replit.nix"]
+# Pipe setup
+pipe_gap = 150
+pipe_speed = 3
+pipes = []
 
-[deployment]
-run = ["python3", "main.py"]
-deploymentTarget = "cloudrun"
+def create_pipe():
+    # Top pipe
+    top_height = random.randint(80, HEIGHT//2)
+    top_pipe = turtle.Turtle()
+    top_pipe.shape("square")
+    top_pipe.color("green")
+    top_pipe.shapesize(stretch_wid=top_height/20, stretch_len=3)
+    top_pipe.penup()
+    top_pipe.goto(WIDTH//2 + 30, HEIGHT//2 - top_height/2)
+    top_pipe.passed = False
+
+    # Bottom pipe
+    bottom_height = HEIGHT - top_height - pipe_gap - 80
+    bottom_pipe = turtle.Turtle()
+    bottom_pipe.shape("square")
+    bottom_pipe.color("green")
+    bottom_pipe.shapesize(stretch_wid=bottom_height/20, stretch_len=3)
+    bottom_pipe.penup()
+    bottom_pipe.goto(WIDTH//2 + 30, -HEIGHT//2 + bottom_height/2 + 40)
+    bottom_pipe.passed = False
+
+    pipes.append((top_pipe, bottom_pipe))
+
+# Score display
+score = 0
+pen = turtle.Turtle()
+pen.hideturtle()
+pen.penup()
+pen.goto(0, HEIGHT//2 - 60)
+pen.color("black")
+
+def update_score():
+    pen.clear()
+    pen.write(f"Score: {score}", align="center", font=("Arial", 24, "bold"))
+
+update_score()
+
+# Bird controls
+def flap():
+    bird.dy = 7
+
+wn.listen()
+wn.onkeypress(flap, "space")
+
+# Main game loop
+frame = 0
+game_over = False
+
+while not game_over:
+    wn.update()
+    time.sleep(1/60)
+    frame += 1
+
+    # Bird movement
+    bird.dy += gravity
+    bird.sety(bird.ycor() + bird.dy)
+
+    # Ground or ceiling collision
+    if bird.ycor() < -HEIGHT//2 + 15 or bird.ycor() > HEIGHT//2 - 15:
+        break
+
+    # Pipe spawning
+    if frame % 90 == 0:
+        create_pipe()
+
+    for t_pipe, b_pipe in pipes:
+        t_pipe.setx(t_pipe.xcor() - pipe_speed)
+        b_pipe.setx(b_pipe.xcor() - pipe_speed)
+
+        # Collision detection
+        if (t_pipe.xcor() - 30 < bird.xcor() < t_pipe.xcor() + 30):
+            if bird.ycor() > t_pipe.ycor() + (t_pipe.shapesize()[0]*10)/2 or \
+               bird.ycor() < b_pipe.ycor() - (b_pipe.shapesize()[0]*10)/2:
+                pass
+            else:
+                game_over = True
+
+        # Scoring
+        if not t_pipe.passed and t_pipe.xcor() + 30 < bird.xcor():
+            t_pipe.passed = True
+            b_pipe.passed = True
+            score += 1
+            update_score()
+
+    # Remove off-screen pipes
+    pipes = [p for p in pipes if p[0].xcor() > -WIDTH//2 - 60]
+
+# Game Over
+pen.goto(0, 0)
+pen.color("red")
+pen.write(f"Game Over!\nFinal Score: {score}", align="center", font=("Arial", 28, "bold"))
+wn.mainloop()
