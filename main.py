@@ -2,13 +2,14 @@ import random
 import os
 import time
 
-# Words list with random selection
-words = ['python', 'hangman', 'sebas', 'nina', 'coding']
+# Woordenlijst
+words = ['informatica', 'informatiekunde', 'spelletje', 'aardigheidje', 'scholier', 'fotografie', 'waardebepaling', 'specialiteit', 'verzekering', 'universiteit', 'heesterperk']
 word = random.choice(words)
 guessed = ['_'] * len(word)
 attempts = 6
 guessed_letters = set()
 
+# Afbeeldingen
 HANGMAN_PICS = [
     """
      +---+
@@ -68,6 +69,7 @@ HANGMAN_PICS = [
     ========="""
 ]
 
+# Het spel
 print("Welcome to Hangman!")
 
 while attempts > 0 and '_' in guessed:
@@ -81,7 +83,7 @@ while attempts > 0 and '_' in guessed:
 
     if not guess.isalpha() or len(guess) != 1:
         print("Please enter a single alphabetic character.")
-        sleep(1)
+        time.sleep(1)
         continue
 
     if guess in guessed_letters:
@@ -102,7 +104,7 @@ while attempts > 0 and '_' in guessed:
         print("Wrong!")
         time.sleep(1)
 
-# Results
+# Resultaat
 os.system('clear')
 print(HANGMAN_PICS[6 - attempts])
 if '_' not in guessed:
