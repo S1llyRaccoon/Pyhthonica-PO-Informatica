@@ -70,7 +70,7 @@ HANGMAN_PICS = [
 ]
 
 # Het spel
-print("Welcome to Hangman!")
+print("Welcome bij Galgje!")
 
 while attempts > 0 and '_' in guessed:
     os.system('clear')
@@ -82,12 +82,12 @@ while attempts > 0 and '_' in guessed:
     guess = input("Guess a letter: ").lower()
 
     if not guess.isalpha() or len(guess) != 1:
-        print("Please enter a single alphabetic character.")
+        print("Voeg astublieft een enkelvoudig alphabetische letter.")
         time.sleep(1)
         continue
 
     if guess in guessed_letters:
-        print("You already guessed that letter.")
+        print("Je hebt deze letter al geprobeert.")
         time.sleep(1)
         continue
 
@@ -101,13 +101,13 @@ while attempts > 0 and '_' in guessed:
         time.sleep(1)
     else:
         attempts -= 1
-        print("Wrong!")
+        print("Fout!")
         time.sleep(1)
 
 # Resultaat
 os.system('clear')
 print(HANGMAN_PICS[6 - attempts])
 if '_' not in guessed:
-    print("\nCongratulations! You guessed the word:", word)
+    print("\nGefeliciteerd! Je hebt het woord geraden:", word)
 else:
-    print("\nGame Over! The word was:", word)
+    print("\nGame Over! Het woord was:", word)
