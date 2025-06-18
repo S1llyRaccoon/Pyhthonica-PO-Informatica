@@ -2,7 +2,7 @@ import random
 import os
 import time
 
-# Woordenlijst
+# Woorden
 words = ['informatica', 'informatiekunde', 'spelletje', 'aardigheidje', 'scholier', 'fotografie', 'waardebepaling', 'specialiteit', 'verzekering', 'universiteit', 'heesterperk']
 word = random.choice(words)
 guessed = ['_'] * len(word)
