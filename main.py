@@ -2,15 +2,15 @@ import random
 import os
 import time
 
-# Woorden
-words = ['informatica', 'informatiekunde', 'spelletje', 'aardigheidje', 'scholier', 'fotografie', 'waardebepaling', 'specialiteit', 'verzekering', 'universiteit', 'heesterperk']
+#woorden#
+words =  ['informatica', 'informatiekunde', 'spelletje', 'aardigheidje', 'scholier', 'fotografie', 'waardebepaling', 'specialiteit', 'verzekering', 'universiteit', 'heesterperk']
 word = random.choice(words)
-guessed = ['_'] * len(word)
-attempts = 6
-guessed_letters = set()
+guessed =['_'] * len(word)
+attempts = 5
+geraden_letters = set()
 
-# Afbeeldingen
-HANGMAN_PICS = [
+#afbeeldingen#
+Galgje_Pics = [
     """
      +---+
      |   |
@@ -24,14 +24,6 @@ HANGMAN_PICS = [
      |   |
      O   |
          |
-         |
-         |
-    =========""",
-    """
-     +---+
-     |   |
-     O   |
-     |   |
          |
          |
     =========""",
@@ -69,45 +61,39 @@ HANGMAN_PICS = [
     ========="""
 ]
 
-# Het spel
-print("Welcome bij Galgje!")
+#het spel#
+print ("Welkom bij Galgje!")
 
 while attempts > 0 and '_' in guessed:
-    os.system('clear')
-    print(HANGMAN_PICS[6 - attempts])
-    print("\nWord:", ' '.join(guessed))
-    print(f"Guesses left: {attempts}")
-    print("Guessed letters:", ', '.join(sorted(guessed_letters)))
+  os.system ('clear')
+print(Galgje_Pics[5-attempts])
+print("\nWord",''.join("geraden"))
+print(f"pogingen over: {attempts}")
+print("geraden letters:", ', '.join(sorted(geraden_letters)))
 
-    guess = input("Guess a letter: ").lower()
+guess = input("Raad een letter: ").lower()
 
-    if not guess.isalpha() or len(guess) != 1:
-        print("Voeg astublieft een enkelvoudig alphabetische letter.")
-        time.sleep(1)
-        continue
-
-    if guess in guessed_letters:
-        print("Je hebt deze letter al geprobeert.")
-        time.sleep(1)
-        continue
-
-    guessed_letters.add(guess)
-
-    if guess in word:
-        for i, c in enumerate(word):
-            if c == guess:
-                guessed[i] = guess
-        print("Correct!")
-        time.sleep(1)
-    else:
-        attempts -= 1
-        print("Fout!")
-        time.sleep(1)
-
-# Resultaat
+if not guess.isalpha() or len(guess) != 1:
+  print("Ongeldige invoer. Probeer opnieuw.")
+  time.sleep(1)
+  continue
+if guess in geraden_letters:
+  print("Je hebt deze letter al geraden. Probeer opnieuw.")
+  time.sleep(1)
+  continue
+  
+geraden_letters.add(guess)
+if guess in word:
+  for i,c in enumerate(word):
+    if c==guess:
+       guessed[i]=guess
+    print("Goed geraden!")
+    time.sleep(1)
+    
+#resultaat#
 os.system('clear')
-print(HANGMAN_PICS[6 - attempts])
+print(Galgje_Pics[5-attempts])
 if '_' not in guessed:
-    print("\nGefeliciteerd! Je hebt het woord geraden:", word)
+  print("\nGefeliciteerd! Je hebt het woord geraden:", word)
 else:
-    print("\nGame Over! Het woord was:", word)
+  print("\nHelaas, je hebt het woord niet geraden. Het woord was:",word)
